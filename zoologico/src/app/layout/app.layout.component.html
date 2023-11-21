@@ -1,0 +1,9 @@
+<h1>Hello!</h1>
+<nav>
+  <ul>
+    <li><a routerLink="/app/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
+    <li><button (click)="logout()">Sign-out</button></li>
+  </ul>
+</nav>
+<!-- The routed views render in the <router-outlet>-->
+<router-outlet></router-outlet>
