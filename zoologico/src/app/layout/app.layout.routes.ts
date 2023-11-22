@@ -19,19 +19,18 @@ export const routes: Routes = [
       },
       {
         path: 'animais',
-        component: AnimalsComponent,
         // loadChildren: () => import('../pages/animals/animals.module').then(m => m.AnimalsModule),
-        // component: AnimalsComponent,
-        // children: [
-        //   {
-        //     path: 'todos',
-        //     component: AnimalsComponent
-        //   },
-        //   {
-        //     path: 'mamiferos',
-        //     component: AnimalsComponent
-        //   }
-        // ]
+        component: AnimalsComponent,
+        children: [
+          {
+            path: 'todos',
+            component: AnimalsComponent
+          },
+          {
+            path: 'mamiferos',
+            component: AnimalsComponent
+          }
+        ]
       }
     ]
   },
