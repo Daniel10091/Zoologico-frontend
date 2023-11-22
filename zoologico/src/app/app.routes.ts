@@ -15,9 +15,9 @@ export const routes: Routes = [
     path: 'app',
     loadChildren: () => import('./layout/app.layout.module').then(m => m.AppLayoutModule),
   },
-  {
-    path: '**',
-    redirectTo: '/login',
-    pathMatch: 'full',
-  }
+  // {
+  //   path: '**',
+  //   redirectTo: '/login',
+  //   pathMatch: 'full',
+  // }
 ];

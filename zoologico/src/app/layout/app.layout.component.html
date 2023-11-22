@@ -1,9 +1,10 @@
-<h1>Hello!</h1>
-<nav>
-  <ul>
-    <li><a routerLink="/app/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
-    <li><button (click)="logout()">Sign-out</button></li>
-  </ul>
-</nav>
+<app-topbar></app-topbar>
+
+<div class="col-12">
+  <div class="mt-8">
+    <p-menubar [model]="tieredItems" ></p-menubar>
+  </div>
+</div>
+
 <!-- The routed views render in the <router-outlet>-->
 <router-outlet></router-outlet>

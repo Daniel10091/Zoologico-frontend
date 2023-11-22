@@ -1,0 +1,14 @@
+<div class="layout-topbar">
+  <a class="layout-topbar-logo" routerLink="app/home">
+    <img src="assets/layout/images/logo.png" alt="logo">
+    <span>ZooVida</span>
+  </a>
+
+  <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+    <button class="p-link layout-topbar-button border-2 border-300" (click)="menu.toggle($event)">
+      <img src="assets/layout/images/profile.png" class="w-full" alt="Profile">
+      <span>Profile</span>
+    </button>
+    <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+  </div>
+</div>
