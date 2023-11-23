@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { routes } from './animals.routes';
+import { AnimalsComponent } from './animals.component';
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild([
+		{ path: '', component: AnimalsComponent }
+	])],
   exports: [RouterModule]
 })
 export class AnimalsRoutingModule { }

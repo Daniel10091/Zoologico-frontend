@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { HomeComponent } from "../pages/home/home.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { AnimalsComponent } from "../pages/animals/animals.component";
+import { MammalsComponent } from "../pages/animals/categories/mammals/mammals.component";
 
 export const routes: Routes = [
   {
@@ -20,7 +21,7 @@ export const routes: Routes = [
       {
         path: 'animais',
         // loadChildren: () => import('../pages/animals/animals.module').then(m => m.AnimalsModule),
-        component: AnimalsComponent,
+        // component: AnimalsComponent,
         children: [
           {
             path: 'todos',
@@ -28,7 +29,7 @@ export const routes: Routes = [
           },
           {
             path: 'mamiferos',
-            component: AnimalsComponent
+            component: MammalsComponent
           }
         ]
       }

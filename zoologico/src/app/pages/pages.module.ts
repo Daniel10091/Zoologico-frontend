@@ -2,22 +2,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
-import { PasswordModule } from 'primeng/password';
-import { MessageModule } from 'primeng/message';
-import { MessagesModule } from 'primeng/messages';
-import { ToastModule } from 'primeng/toast';
-
 import { PagesRoutingModule } from './pages-routing.module';
-import { AnimalsRoutingModule } from './animals/animals-routing.module';
+// import { AnimalsRoutingModule } from './animals/animals-routing.module';
 
-import { AnimalsComponent } from './animals/animals.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 
+import { AnimalsComponent } from './animals/animals.component';
 import { MammalsComponent } from './animals/categories/mammals/mammals.component';
 import { BirdsComponent } from './animals/categories/birds/birds.component';
 import { ReptilesComponent } from './animals/categories/reptiles/reptiles.component';
@@ -34,6 +25,25 @@ import { FlatwormsComponent } from './animals/categories/flatworms/flatworms.com
 import { RoundwormsComponent } from './animals/categories/roundworms/roundworms.component';
 import { AnnelidsComponent } from './animals/categories/annelids/annelids.component';
 import { ArthropodsComponent } from './animals/categories/arthropods/arthropods.component';
+
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
+import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { FileUploadModule } from 'primeng/fileupload';
+import { RippleModule } from 'primeng/ripple';
+import { ToolbarModule } from 'primeng/toolbar';
+import { RatingModule } from 'primeng/rating';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -72,6 +82,16 @@ import { ArthropodsComponent } from './animals/categories/arthropods/arthropods.
 		MessagesModule,
 		MessageModule,
 		ToastModule,
+    TableModule,
+    FileUploadModule,
+    RippleModule,
+    ToolbarModule,
+    RatingModule,
+    InputTextareaModule,
+    DropdownModule,
+    RadioButtonModule,
+    InputNumberModule,
+    DialogModule
   ]
 })
 export class PagesModule { }
