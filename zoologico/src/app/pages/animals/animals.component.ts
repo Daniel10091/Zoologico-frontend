@@ -1,16 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/api/product';
+import { Product } from 'src/app/models/api/product';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
+import { ProductService } from 'src/app/services/product.service';
+import { AnimalService } from 'src/app/services/animals/animal.service';
+import { Animal } from 'src/app/models/animal';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-animals',
   templateUrl: './animals.component.html',
   styleUrls: ['./animals.component.scss'],
-  providers: [MessageService, ProductService]
+  providers: [
+    MessageService, 
+    ProductService, 
+    AnimalService
+  ]
 })
 export class AnimalsComponent implements OnInit {
+
+  animals: Animal[] = [];
 
   productDialog: boolean = false;
 
@@ -33,12 +42,15 @@ export class AnimalsComponent implements OnInit {
   rowsPerPageOptions = [5, 10, 20];
 
   constructor(
+    private messageService: MessageService,
     private productService: ProductService, 
-    private messageService: MessageService
+    private animalService: AnimalService
   ) { }
 
   ngOnInit() {
     this.productService.getProducts().then(data => this.products = data);
+
+    this.getAllAnimals();
 
     this.cols = [
       { field: 'product', header: 'Product' },
@@ -59,6 +71,18 @@ export class AnimalsComponent implements OnInit {
     this.product = {};
     this.submitted = false;
     this.productDialog = true;
+  }
+
+  public getAllAnimals(): void {
+    this.animalService.getAllAnimals().subscribe(
+      (data: Animal[]) => {
+        this.animals = data;
+        console.log(this.animals);
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.message);
+      }
+    );
   }
 
   deleteSelectedProducts() {
