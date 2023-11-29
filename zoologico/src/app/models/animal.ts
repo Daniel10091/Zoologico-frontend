@@ -1,6 +1,6 @@
 export interface Animal {
 
-  animalcode?: number;
+  animalCode?: number;
   animalNome?: string;
   animalDataNascimento?: string;
   animalCor?: string;

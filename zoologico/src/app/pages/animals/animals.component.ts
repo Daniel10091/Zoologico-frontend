@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Product } from 'src/app/models/api/product';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/services/product.service';
-import { AnimalService } from 'src/app/services/animals/animal.service';
+import { AnimalService } from 'src/app/services/animal.service';
 import { Animal } from 'src/app/models/animal';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -13,25 +11,22 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./animals.component.scss'],
   providers: [
     MessageService, 
-    ProductService, 
     AnimalService
   ]
 })
 export class AnimalsComponent implements OnInit {
 
+  animalDialog: boolean = false;
+
+  deleteAnimalDialog: boolean = false;
+
+  deleteAnimalsDialog: boolean = false;
+
   animals: Animal[] = [];
 
-  productDialog: boolean = false;
+  animal: Animal = {};
 
-  deleteProductDialog: boolean = false;
-
-  deleteProductsDialog: boolean = false;
-
-  products: Product[] = [];
-
-  product: Product = {};
-
-  selectedProducts: Product[] = [];
+  selectedAnimals: Animal[] = [];
 
   submitted: boolean = false;
 
@@ -43,13 +38,10 @@ export class AnimalsComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private productService: ProductService, 
     private animalService: AnimalService
   ) { }
 
   ngOnInit() {
-    this.productService.getProducts().then(data => this.products = data);
-
     this.getAllAnimals();
 
     this.cols = [
@@ -68,9 +60,9 @@ export class AnimalsComponent implements OnInit {
   }
 
   openNew() {
-    this.product = {};
+    this.animal = {};
     this.submitted = false;
-    this.productDialog = true;
+    this.animalDialog = true;
   }
 
   public getAllAnimals(): void {
@@ -85,68 +77,10 @@ export class AnimalsComponent implements OnInit {
     );
   }
 
-  deleteSelectedProducts() {
-    this.deleteProductsDialog = true;
-  }
-
-  editProduct(product: Product) {
-    this.product = { ...product };
-    this.productDialog = true;
-  }
-
-  deleteProduct(product: Product) {
-    this.deleteProductDialog = true;
-    this.product = { ...product };
-  }
-
-  confirmDeleteSelected() {
-    this.deleteProductsDialog = false;
-    this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-    this.selectedProducts = [];
-  }
-
-  confirmDelete() {
-    this.deleteProductDialog = false;
-    this.products = this.products.filter(val => val.id !== this.product.id);
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-    this.product = {};
-  }
-
-  hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-  }
-
-  saveProduct() {
-    this.submitted = true;
-
-    if (this.product.name?.trim()) {
-      if (this.product.id) {
-        // @ts-ignore
-        this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-        this.products[this.findIndexById(this.product.id)] = this.product;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-      } else {
-        this.product.id = this.createId();
-        this.product.code = this.createId();
-        this.product.image = 'product-placeholder.svg';
-        // @ts-ignore
-        this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-        this.products.push(this.product);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-      }
-
-      this.products = [...this.products];
-      this.productDialog = false;
-      this.product = {};
-    }
-  }
-
-  findIndexById(id: string): number {
+  findAnimalById(id: number): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
+    for (let i = 0; i < this.animals.length; i++) {
+      if (this.animals[i].animalCode === id) {
         index = i;
         break;
       }
@@ -155,14 +89,64 @@ export class AnimalsComponent implements OnInit {
     return index;
   }
 
-  createId(): string {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
+  public saveAnimal() {
+    this.submitted = true;
+
+    this.animalService.registerAnimal(this.animal).subscribe(
+      (data: Animal) => {
+        console.log(data);
+        this.animalDialog = false;
+        this.animal = {};
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animal Created', life: 3000 });
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.message);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Animal Not Created', life: 3000 });
+      }
+    );
   }
+
+  public editAnimal(animal: Animal) {
+    this.animal = { ...animal };
+    this.animalDialog = true;
+  }
+
+  public deleteAnimal(animal: Animal) {
+    this.deleteAnimalDialog = true;
+    this.animal = { ...animal };
+  }
+
+  public deleteSelectedAnimals() {
+    this.deleteAnimalsDialog = true;
+  }
+
+  confirmDelete() {
+    this.deleteAnimalDialog = false;
+    this.animals = this.animals.filter(val => val.animalCode !== this.animal.animalCode);
+    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animal Deleted', life: 3000 });
+    this.animal = {};
+  }
+
+  confirmDeleteSelected() {
+    this.deleteAnimalsDialog = false;
+    this.animals = this.animals.filter(val => !this.selectedAnimals.includes(val));
+    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animals Deleted', life: 3000 });
+    this.selectedAnimals = [];
+  }
+
+  hideDialog() {
+    this.animalDialog = false;
+    this.submitted = false;
+  }
+
+  // createId(): string {
+  //   let id = '';
+  //   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  //   for (let i = 0; i < 5; i++) {
+  //     id += chars.charAt(Math.floor(Math.random() * chars.length));
+  //   }
+  //   return id;
+  // }
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');

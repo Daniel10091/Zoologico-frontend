@@ -5,7 +5,8 @@ import { AuthService } from '../services/auth/auth.service';
 @Component({
   selector: 'app-app.layout',
   templateUrl: './app.layout.component.html',
-  styleUrls: ['./app.layout.component.scss']
+  styleUrls: ['./app.layout.component.scss'],
+  providers: [ AuthService ]
 })
 export class AppLayoutComponent implements OnInit {
 
@@ -17,8 +18,8 @@ export class AppLayoutComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('token') != null) {
-      this.authService.isLoggedIn = true;
-      this.isLoggedIn = this.authService.isLoggedIn;
+      this.authService.userIsLoggedIn = true;
+      this.isLoggedIn = this.authService.userIsLoggedIn;
     } else {
       window.location.href = '/login';
     }

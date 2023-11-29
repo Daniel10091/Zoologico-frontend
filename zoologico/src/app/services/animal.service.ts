@@ -15,4 +15,8 @@ export class AnimalService {
     return this.http.get<Animal[]>(AnimalService.API);
   }
 
+  registerAnimal(animal: Animal): Observable<Animal> {
+    return this.http.post<Animal>(AnimalService.API, animal);
+  }
+
 }

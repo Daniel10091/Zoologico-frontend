@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiURLBase: 'http://10.1.4.7:8084/zoologico/api/v1',
+  apiURLBase: 'http://192.168.0.110:8084/zoologico/api/v1',
 };
 
 /*

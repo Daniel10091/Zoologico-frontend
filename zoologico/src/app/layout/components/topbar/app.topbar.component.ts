@@ -11,7 +11,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
       :host ::ng-deep .p-menubar-root-list {
           flex-wrap: wrap;
       }
-  `]
+  `],
+  providers: [ AuthService ]
 })
 export class AppTopbarComponent implements OnInit {
 
@@ -45,8 +46,8 @@ export class AppTopbarComponent implements OnInit {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    this.authService.isLoggedIn = false;
-    this.isLoggedIn = this.authService.isLoggedIn;
+    this.authService.userIsLoggedIn = false;
+    this.isLoggedIn = this.authService.userIsLoggedIn;
     window.location.href = '/login';
   }
 
