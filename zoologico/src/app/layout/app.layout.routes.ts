@@ -3,6 +3,8 @@ import { HomeComponent } from "../pages/home/home.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { AnimalsComponent } from "../pages/animals/animals.component";
 import { MammalsComponent } from "../pages/animals/categories/mammals/mammals.component";
+import { ZoosComponent } from "../pages/zoos/zoos.component";
+import { SuppliersComponent } from "../pages/suppliers/suppliers.component";
 
 export const routes: Routes = [
   {
@@ -30,6 +32,24 @@ export const routes: Routes = [
           {
             path: 'mamiferos',
             component: MammalsComponent
+          }
+        ]
+      },
+      {
+        path: 'zoologicos',
+        children: [
+          {
+            path: 'todos',
+            component: ZoosComponent
+          }
+        ]
+      },
+      {
+        path: 'fornecedores',
+        children: [
+          {
+            path: 'todos',
+            component: SuppliersComponent
           }
         ]
       }

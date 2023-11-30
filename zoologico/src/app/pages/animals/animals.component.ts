@@ -18,6 +18,8 @@ export class AnimalsComponent implements OnInit {
 
   animalDialog: boolean = false;
 
+  editAnimalDialog: boolean = false;
+
   deleteAnimalDialog: boolean = false;
 
   deleteAnimalsDialog: boolean = false;
@@ -27,6 +29,8 @@ export class AnimalsComponent implements OnInit {
   animal: Animal = {};
 
   selectedAnimals: Animal[] = [];
+
+  animalDataNascimentoIsValid: boolean = true;
 
   submitted: boolean = false;
 
@@ -69,7 +73,11 @@ export class AnimalsComponent implements OnInit {
     this.animalService.getAllAnimals().subscribe(
       (data: Animal[]) => {
         this.animals = data;
-        console.log(this.animals);
+
+        this.animals.forEach((animal: Animal) => {
+          var [year, month, day]: any = animal.animalDataNascimento?.split('-');
+          animal.animalDataNascimento = `${day}-${month}-${year}`;
+        });
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
@@ -89,26 +97,69 @@ export class AnimalsComponent implements OnInit {
     return index;
   }
 
-  public saveAnimal() {
-    this.submitted = true;
+  public saveAnimal(): void {
+    var especieCode = this.animal.especieCode;
+    var zoologicoCode = this.animal.zoologicoCode;
 
-    this.animalService.registerAnimal(this.animal).subscribe(
-      (data: Animal) => {
-        console.log(data);
-        this.animalDialog = false;
-        this.animal = {};
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animal Created', life: 3000 });
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.message);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Animal Not Created', life: 3000 });
-      }
-    );
+    this.animal.especieCode = Number(especieCode);
+    this.animal.zoologicoCode = Number(zoologicoCode);
+
+    this.submitted = true;
+    
+    if (this.editAnimalDialog) {
+      var [day, month, year]: any = this.animal.animalDataNascimento?.replaceAll('/', '-').split('-');
+      this.animal.animalDataNascimento = `${year}-${month}-${day}`;
+
+      var animal: Animal = {
+        animalCode: this.animal.animalCode,
+        animalNome: this.animal.animalNome,
+        animalDataNascimento: this.animal.animalDataNascimento,
+        animalCor: this.animal.animalCor,
+        animalTamanho: this.animal.animalTamanho,
+        animalDescricao: this.animal.animalDescricao,
+        especieCode: this.animal.especieCode,
+        zoologicoCode: this.animal.zoologicoCode,
+      };
+      console.log(animal);
+
+      this.animalService.updateAnimal(animal).subscribe(
+        (data: Animal) => {
+          // console.log(data);
+          this.animalDialog = false;
+          this.animal = {};
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Atualizado', life: 3000 });
+          this.getAllAnimals();
+          this.editAnimalDialog = false;
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error.message);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar o Animal', life: 3000 });
+        }
+      );
+    } else {
+      var [day, month, year]: any = this.animal.animalDataNascimento?.split('/');
+      this.animal.animalDataNascimento = `${year}-${month}-${day}`;
+      
+      this.animalService.registerAnimal(this.animal).subscribe(
+        (data: Animal) => {
+          // console.log(data);
+          this.animalDialog = false;
+          this.animal = {};
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Cadastrado', life: 3000 });
+          this.getAllAnimals();
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error.message);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar o Animal', life: 3000 });
+        }
+      );
+    }
   }
 
   public editAnimal(animal: Animal) {
     this.animal = { ...animal };
     this.animalDialog = true;
+    this.editAnimalDialog = true;
   }
 
   public deleteAnimal(animal: Animal) {
@@ -122,21 +173,51 @@ export class AnimalsComponent implements OnInit {
 
   confirmDelete() {
     this.deleteAnimalDialog = false;
-    this.animals = this.animals.filter(val => val.animalCode !== this.animal.animalCode);
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animal Deleted', life: 3000 });
-    this.animal = {};
+    this.animalService.deleteAnimal(this.animal).subscribe(
+      (data: any) => {
+        // console.log(data);
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Removido', life: 3000 });
+        this.animal = {};
+        this.getAllAnimals();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.message);
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível remover o Animal', life: 3000 });
+      }
+    );
   }
 
   confirmDeleteSelected() {
     this.deleteAnimalsDialog = false;
     this.animals = this.animals.filter(val => !this.selectedAnimals.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Animals Deleted', life: 3000 });
+    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animais Removidos', life: 3000 });
     this.selectedAnimals = [];
   }
 
   hideDialog() {
     this.animalDialog = false;
     this.submitted = false;
+  }
+
+  checkDateValue(value: any) {
+    this.animalDataNascimentoIsValid = false;
+    
+    if (value.length === 10) {
+      var date = value.split('/');
+      var day = date[0];
+      var month = date[1];
+      var year = date[2];
+
+      var dateObject = new Date(year, month - 1, day);
+
+      if (
+        dateObject.getFullYear() == year &&
+        dateObject.getMonth() + 1 == month &&
+        dateObject.getDate() == day
+      ) {
+        this.animalDataNascimentoIsValid = true;
+      }
+    }
   }
 
   // createId(): string {
@@ -149,6 +230,8 @@ export class AnimalsComponent implements OnInit {
   // }
 
   onGlobalFilter(table: Table, event: Event) {
+    console.log((event.target as HTMLInputElement).value);
+    
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 

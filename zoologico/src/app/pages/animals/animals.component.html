@@ -16,7 +16,7 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="animals" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedAnimals" selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="animals" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['animal.animalCode','animal.animalNome','animalDataNascimento','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedAnimals" selectionMode="multiple" [rowHover]="true" dataKey="id">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Products</h5>
@@ -41,38 +41,38 @@
               <th></th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-animals>
+        <ng-template pTemplate="body" let-animal>
           <tr>
             <td>
               <p-tableCheckbox [value]="animals"></p-tableCheckbox>
             </td>
             <td style="width:14%; min-width:10rem;">
               <span class="p-column-title">Code</span>
-              {{animals.animalCode}}
+              {{animal.animalCode}}
             </td>
             <td style="width:14%; min-width:10rem;">
               <span class="p-column-title">Nome</span>
-              {{animals.animalNome}}
+              {{animal.animalNome}}
             </td>
             <td style="width:14%; min-width:10rem;">
               <span class="p-column-title">Data de Nascimento</span>
-              {{animals.animalDataNascimento}}
+              {{animal.animalDataNascimento}}
             </td>
             <td style="width:14%; min-width:8rem;">
               <span class="p-column-title">Cor</span>
-              {{animals.animalCor}}
+              {{animal.animalCor}}
             </td>
             <td style="width:14%; min-width:10rem;">
               <span class="p-column-title">Tamanho</span>
-              {{animals.animalTamanho}}
+              {{animal.animalTamanho}}
             </td>
             <td style="width:14%; min-width: 10rem;">
               <span class="p-column-title">Espécie</span>
-              {{animals.especieNome}}
+              {{animal.especieNome}}
             </td>
             <td style="width:14%; min-width: 10rem;">
               <span class="p-column-title">Zoológico</span>
-              {{animals.zoologicoNome}}
+              {{animal.zoologicoNome}}
             </td>
             <td>
               <div class="flex">
@@ -95,7 +95,8 @@
           </div>
           <div class="field col-4">
             <label for="name">Data de Nascimento</label>
-            <input type="text" pInputText id="name" [(ngModel)]="animal.animalDataNascimento" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.animalDataNascimento}"/>
+            <!-- <input type="text" pInputText id="name" [(ngModel)]="animal.animalDataNascimento" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.animalDataNascimento}"/> -->
+            <p-inputMask [(ngModel)]="animal.animalDataNascimento" mask="99/99/9999" (ngModelChange)="checkDateValue($event)" class="{{animal.animalDataNascimento !== '' && animalDataNascimentoIsValid ? '' : 'ng-invalid ng-dirty'}}"></p-inputMask>
             <small class="ng-dirty ng-invalid" *ngIf="submitted && !animal.animalDataNascimento">Data de Nascimento é obrigatório.</small>
           </div>
         </div>
@@ -106,7 +107,7 @@
             <input type="text" pInputText id="cor" [(ngModel)]="animal.animalCor" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.animalCor}"/>
             <small class="ng-dirty ng-invalid" *ngIf="submitted && !animal.animalCor">Cor é obrigatório.</small>
           </div>
-          <div class="field col-4">
+          <div class="field col">
             <label for="tamanho">Tamanho</label>
             <input type="text" pInputText id="tamanho" [(ngModel)]="animal.animalTamanho" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.animalTamanho}"/>
             <small class="ng-dirty ng-invalid" *ngIf="submitted && !animal.animalTamanho">Tamanho é obrigatório.</small>
@@ -120,11 +121,11 @@
 
         <div class="formgrid grid">
           <div class="field col">
-            <label for="name">Espécie</label>
-            <input type="text" pInputText id="name" [(ngModel)]="animal.especieCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.especieCode}"/>
+            <label for="especieCode">Espécie</label>
+            <input type="text" pInputText id="especieCode" [(ngModel)]="animal.especieCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.especieCode}"/>
             <small class="ng-dirty ng-invalid" *ngIf="submitted && !animal.especieCode">Espécie é obrigatório.</small>
           </div>
-          <div class="field col-4">
+          <div class="field col">
             <label for="name">Zoológico</label>
             <input type="text" pInputText id="name" [(ngModel)]="animal.zoologicoCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !animal.zoologicoCode}"/>
             <small class="ng-dirty ng-invalid" *ngIf="submitted && !animal.zoologicoCode">Zoológico é obrigatório.</small>

@@ -19,4 +19,12 @@ export class AnimalService {
     return this.http.post<Animal>(AnimalService.API, animal);
   }
 
+  updateAnimal(animal: Animal): Observable<Animal> {
+    return this.http.put<Animal>(`${AnimalService.API}/${animal.animalCode}`, animal);
+  }
+
+  deleteAnimal(animal: Animal): Observable<any> {
+    return this.http.delete<any>(`${AnimalService.API}/${animal.animalCode}`);
+  }
+
 }

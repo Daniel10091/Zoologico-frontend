@@ -162,19 +162,24 @@ export class AppLayoutComponent implements OnInit {
         icon: 'pi pi-fw pi-envelope',
         items: [
           {
-            label: 'Tracker',
-            icon: 'pi pi-fw pi-compass',
+            label: 'Todos',
+            routerLink: 'zoologicos/todos',
 
           },
-          {
-            label: 'Map',
-            icon: 'pi pi-fw pi-map-marker',
+          // {
+          //   label: 'Tracker',
+          //   icon: 'pi pi-fw pi-compass',
 
-          },
-          {
-            label: 'Manage',
-            icon: 'pi pi-fw pi-pencil'
-          }
+          // },
+          // {
+          //   label: 'Map',
+          //   icon: 'pi pi-fw pi-map-marker',
+
+          // },
+          // {
+          //   label: 'Manage',
+          //   icon: 'pi pi-fw pi-pencil'
+          // }
         ]
       },
       {
@@ -182,12 +187,8 @@ export class AppLayoutComponent implements OnInit {
         icon: 'pi pi-fw pi-user',
         items: [
           {
-            label: 'Settings',
-            icon: 'pi pi-fw pi-cog'
-          },
-          {
-            label: 'Billing',
-            icon: 'pi pi-fw pi-file'
+            label: 'Todos',
+            routerLink: 'fornecedores/todos',
           }
         ]
       },

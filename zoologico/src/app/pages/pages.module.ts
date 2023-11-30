@@ -26,6 +26,10 @@ import { RoundwormsComponent } from './animals/categories/roundworms/roundworms.
 import { AnnelidsComponent } from './animals/categories/annelids/annelids.component';
 import { ArthropodsComponent } from './animals/categories/arthropods/arthropods.component';
 
+import { ZoosComponent } from './zoos/zoos.component';
+
+import { SuppliersComponent } from './suppliers/suppliers.component';
+
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
@@ -45,11 +49,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
     LoginComponent,
     HomeComponent,
+    
     AnimalsComponent,
     MammalsComponent,
     BirdsComponent,
@@ -66,7 +72,11 @@ import { CalendarModule } from 'primeng/calendar';
     FlatwormsComponent,
     RoundwormsComponent,
     AnnelidsComponent,
-    ArthropodsComponent
+    ArthropodsComponent,
+
+    ZoosComponent,
+
+    SuppliersComponent,
   ],
   imports: [
     CommonModule,
@@ -93,7 +103,8 @@ import { CalendarModule } from 'primeng/calendar';
     RadioButtonModule,
     InputNumberModule,
     DialogModule,
-    CalendarModule
+    CalendarModule,
+    InputMaskModule
   ]
 })
 export class PagesModule { }
