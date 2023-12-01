@@ -119,7 +119,7 @@ export class ZoosComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
-            detail: `Zoologico ${response.zoologicoNome} registrado com sucesso!`, 
+            detail: `O Zoologico ${response.zoologicoNome} foi registrado com sucesso!`, 
             life: 6000
           });
 

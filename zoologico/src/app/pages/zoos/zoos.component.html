@@ -132,7 +132,7 @@
         <div class="field">
           <label for="fornecedor">Fornecedor</label>
           <input type="text" pInputText id="fornecedor" [(ngModel)]="zoo.fornecedorCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !zoo.fornecedorCode}"/>
-          <small class="ng-dirty ng-invalid" *ngIf="submitted && !zoo.fornecedorCode">Zoológico é obrigatório.</small>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !zoo.fornecedorCode">Fornecedor é obrigatório.</small>
         </div>
       </ng-template>
 

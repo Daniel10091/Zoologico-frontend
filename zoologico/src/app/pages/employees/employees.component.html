@@ -1,1 +1,192 @@
-<p>employees works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <div class="my-2">
+            <button pButton pRipple label="Novo" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Excluir" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEmployees()" [disabled]="!selectedEmployees || !selectedEmployees.length"></button>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+          <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Iportar" class="mr-2 inline-block"></p-fileUpload> -->
+          <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+        </ng-template>
+      </p-toolbar>
+
+      <p-table #dt [value]="employees" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['employee.code','employee.nome','employee.sobrenome']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedEmployees" selectionMode="multiple" [rowHover]="true" dataKey="code">
+        <ng-template pTemplate="caption">
+          <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 class="m-0">Gerenciar Funcionários</h5>
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="codigo">Código <p-sortIcon field="codigo"></p-sortIcon></th>
+              <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
+              <th pSortableColumn="cpf">CPF <p-sortIcon field="cpf"></p-sortIcon></th>
+              <th pSortableColumn="endereco">Endereço <p-sortIcon field="endereco"></p-sortIcon></th>
+              <th pSortableColumn="zoologico">Zoológico <p-sortIcon field="fornecedor"></p-sortIcon></th>
+              <th pSortableColumn="cargo">Cargo <p-sortIcon field="cargo"></p-sortIcon></th>
+              <th pSortableColumn="departamento">Departamento <p-sortIcon field="departamento"></p-sortIcon></th>
+              <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-employee>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="employees"></p-tableCheckbox>
+            </td>
+            <td style="width:10%; min-width:10rem;">
+              <span class="p-column-title">Código</span>
+              {{employee.code}}
+            </td>
+            <td style="width:20%; min-width:10rem;">
+              <span class="p-column-title">Nome</span>
+              {{employee.nome + ' ' + employee.sobrenome}}
+            </td>
+            <td style="width:20%; min-width:10rem;">
+              <span class="p-column-title">CPF</span>
+              {{employee.nuCpf}}
+            </td>
+            <td style="width:20%; min-width:8rem;">
+              <span class="p-column-title">Endereço</span>
+              {{employee.logradouro}}
+            </td>
+            <td style="width:20%; min-width:10rem;">
+              <span class="p-column-title">Zoológico</span>
+              {{employee.zoologicoNome}}
+            </td>
+            <td style="width:20%; min-width:10rem;">
+              <span class="p-column-title">Cargo</span>
+              {{employee.cargoTitulo}}
+            </td>
+            <td style="width:20%; min-width:10rem;">
+              <span class="p-column-title">Departamento</span>
+              {{employee.departamentoNome}}
+            </td>
+            <td>
+              <div class="flex">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEmployee(employee)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteEmployee(employee)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <p-dialog [(visible)]="employeeDialog" [style]="{width: '600px'}" header="Detalhes do Funcionário" [modal]="true" class="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="cnpj">Nome</label>
+            <input type="text" pInputText id="cnpj" [(ngModel)]="employee.nome" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.nome}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.nome">Nome é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="sobrenome">Sobrenome</label>
+            <input type="text" pInputText id="sobrenome" [(ngModel)]="employee.sobrenome" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.sobrenome}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.sobrenome">Sobrenome é obrigatório.</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cpf">CPF</label>
+          <!-- <input type="text" pInputText id="cpf" [(ngModel)]="employee.nuCpf" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.nuCpf}"/> -->
+          <p-inputMask id="cpf" [(ngModel)]="employee.nuCpf" mask="999.999.999-99" (ngModelChange)="checkCpfValue($event)" class="{{employee.nuCpf !== '' && cpfIsValid ? '' : 'ng-invalid ng-dirty'}}"></p-inputMask>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.nuCpf">CPF é obrigatório.</small>
+        </div>
+
+        <div class="title my-4">
+          <h5>Endereço</h5>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="pais">País</label>
+            <input type="text" pInputText id="pais" [(ngModel)]="employee.pais" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.pais}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.pais">País é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="estado">Estado</label>
+            <input type="text" pInputText id="estado" [(ngModel)]="employee.estado" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.estado}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.estado">Estado é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="cidade">Cidade</label>
+            <input type="text" pInputText id="cidade" [(ngModel)]="employee.cidade" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.cidade}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.cidade">Cidade é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="logradouro">Logradouro</label>
+            <input type="text" pInputText id="logradouro" [(ngModel)]="employee.logradouro" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.logradouro}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.logradouro">Logradouro é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="complemento">Complemento</label>
+          <input type="text" pInputText id="complemento" [(ngModel)]="employee.complemento" autofocus/>
+        </div>
+
+        <div class="title my-4">
+          <h5>Atuação</h5>
+        </div>
+        
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="zoologico">Zoológico</label>
+            <!-- <input type="text" pInputText id="zoologico" [(ngModel)]="employee.zoologicoCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.zoologicoCode}"/> -->
+			      <p-dropdown [options]="zoos" id="zoologico" [(ngModel)]="selectedZoo" placeholder="Selecione o Zoológico" [showClear]="true" [required]="true" [autofocus]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedZoo}"></p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedZoo">Zoológico é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="cargo">Cargo</label>
+            <!-- <input type="text" pInputText id="cargo" [(ngModel)]="employee.cargoCode" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.cargoCode}"/> -->
+			      <p-dropdown [options]="positions" id="cargo" [(ngModel)]="selectedPosition" placeholder="Selecione o Cargo" [showClear]="true" [required]="true" [autofocus]="true" [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedPosition}"></p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedPosition">Cargo é obrigatório.</small>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmployee()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="deleteEmployeeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="employee">Tem certeza de que deseja excluir <b>{{employee.nome}}</b>?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteEmployeeDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="deleteEmployeesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span>Tem certeza de que deseja excluir os funcionérios selecionados?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteEmployeesDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>
