@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiURLBase: 'https://nvbnb9xr-8084.brs.devtunnels.ms/zoologico/api/v1',
+  apiURLBase: 'http://localhost:8084/zoologico/api/v1',
 };
 
 /*

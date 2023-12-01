@@ -4,5 +4,10 @@ export interface Supplier {
   fornecedorCnpj?: string;
   fornecedorRazaoSocial?: string;
   enderecoCode?: number;
+  pais?: string;
+  estado?: string;
+  cidade?: string;
+  logradouro?: string;
+  complemento?: string;
 
 }

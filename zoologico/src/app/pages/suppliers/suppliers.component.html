@@ -1,1 +1,152 @@
-<p>suppliers works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <div class="my-2">
+            <button pButton pRipple label="Novo" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Excluir" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedSuppliers()" [disabled]="!selectedSuppliers || !selectedSuppliers.length"></button>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+          <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Importar" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
+          <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+        </ng-template>
+      </p-toolbar>
+
+      <p-table #dt [value]="suppliers" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['supplier.animalCode','supplier.animalNome','supplier.animalDataNascimento','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedSuppliers" selectionMode="multiple" [rowHover]="true" dataKey="id">
+        <ng-template pTemplate="caption">
+          <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 class="m-0">Gerenciar Fornecedores</h5>
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="codigo">Código <p-sortIcon field="codigo"></p-sortIcon></th>
+              <th pSortableColumn="cnpj">CNPJ <p-sortIcon field="cnpj"></p-sortIcon></th>
+              <th pSortableColumn="razaoSocial">Razão Social <p-sortIcon field="razaoSocial"></p-sortIcon></th>
+              <th pSortableColumn="endereco">Endereço <p-sortIcon field="endereco"></p-sortIcon></th>
+              <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-supplier>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="suppliers"></p-tableCheckbox>
+            </td>
+            <td style="width:15%; min-width:10rem;">
+              <span class="p-column-title">Código</span>
+              {{supplier.fornecedorCode}}
+            </td>
+            <td style="width:25%; min-width:10rem;">
+              <span class="p-column-title">CNPJ</span>
+              {{supplier.fornecedorCnpj}}
+            </td>
+            <td style="width:25%; min-width:10rem;">
+              <span class="p-column-title">Razão Social</span>
+              {{supplier.fornecedorRazaoSocial}}
+            </td>
+            <td style="width:25%; min-width:8rem;">
+              <span class="p-column-title">Endereço</span>
+              {{supplier.logradouro}}
+            </td>
+            <td>
+              <div class="flex">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editSupplier(supplier)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteSupplier(supplier)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <p-dialog [(visible)]="supplierDialog" [style]="{width: '600px'}" header="Detalhes do Fornecedor" [modal]="true" class="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="cnpj">CNPJ</label>
+            <input type="text" pInputText id="cnpj" [(ngModel)]="supplier.fornecedorCnpj" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.fornecedorCnpj}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.fornecedorCnpj">CNPJ é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="name">Razão Social</label>
+            <input type="text" pInputText id="name" [(ngModel)]="supplier.fornecedorRazaoSocial" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.fornecedorRazaoSocial}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.fornecedorRazaoSocial">Razão Social é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="title my-4">
+          <h5>Endereço</h5>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="pais">País</label>
+            <input type="text" pInputText id="pais" [(ngModel)]="supplier.pais" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.pais}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.pais">País é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="estado">Estado</label>
+            <input type="text" pInputText id="estado" [(ngModel)]="supplier.estado" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.estado}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.estado">Estado é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col">
+            <label for="cidade">Cidade</label>
+            <input type="text" pInputText id="cidade" [(ngModel)]="supplier.cidade" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.cidade}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.cidade">Cidade é obrigatório.</small>
+          </div>
+          <div class="field col">
+            <label for="logradouro">Logradouro</label>
+            <input type="text" pInputText id="logradouro" [(ngModel)]="supplier.logradouro" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !supplier.logradouro}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !supplier.logradouro">Logradouro é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="complemento">Complemento</label>
+          <input type="text" pInputText id="complemento" [(ngModel)]="supplier.complemento" autofocus/>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveSupplier()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="deleteSupplierDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="supplier">Tem certeza de que deseja excluir <b>{{supplier.fornecedorCnpj}}</b>?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteSupplierDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="deleteSuppliersDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span>Tem certeza de que deseja excluir os fornecedores selecionados?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteSuppliersDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

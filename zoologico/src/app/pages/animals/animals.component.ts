@@ -85,7 +85,7 @@ export class AnimalsComponent implements OnInit {
     );
   }
 
-  findAnimalById(id: number): number {
+  public findAnimalById(id: number): number {
     let index = -1;
     for (let i = 0; i < this.animals.length; i++) {
       if (this.animals[i].animalCode === id) {
@@ -120,20 +120,30 @@ export class AnimalsComponent implements OnInit {
         especieCode: this.animal.especieCode,
         zoologicoCode: this.animal.zoologicoCode,
       };
-      console.log(animal);
 
       this.animalService.updateAnimal(animal).subscribe(
-        (data: Animal) => {
-          // console.log(data);
+        (response: Animal) => {
+          this.getAllAnimals();
+
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Sucesso', 
+            detail: `O Animal ${response.animalNome} foi atualizado com sucesso!`, 
+            life: 6000 
+          });
+          
           this.animalDialog = false;
           this.animal = {};
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Atualizado', life: 3000 });
-          this.getAllAnimals();
           this.editAnimalDialog = false;
         },
         (error: HttpErrorResponse) => {
-          console.log(error.message);
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar o Animal', life: 3000 });
+          console.log(error.error);
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: `${error.error.detail}`, 
+            life: 6000 
+          });
         }
       );
     } else {
@@ -141,16 +151,27 @@ export class AnimalsComponent implements OnInit {
       this.animal.animalDataNascimento = `${year}-${month}-${day}`;
       
       this.animalService.registerAnimal(this.animal).subscribe(
-        (data: Animal) => {
-          // console.log(data);
+        (response: Animal) => {
+          this.getAllAnimals();
+          
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Sucesso', 
+            detail: `O Animal ${response.animalNome} foi registrado com sucesso!`, 
+            life: 6000 
+          });
+          
           this.animalDialog = false;
           this.animal = {};
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Cadastrado', life: 3000 });
-          this.getAllAnimals();
         },
         (error: HttpErrorResponse) => {
-          console.log(error.message);
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível atualizar o Animal', life: 3000 });
+          console.log(error.error);
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Erro', 
+            detail: `${error.error.detail}`, 
+            life: 6000 
+          });
         }
       );
     }
@@ -163,12 +184,12 @@ export class AnimalsComponent implements OnInit {
   }
 
   public deleteAnimal(animal: Animal) {
-    this.deleteAnimalDialog = true;
     this.animal = { ...animal };
+    this.deleteAnimalDialog = true;
   }
 
   public deleteSelectedAnimals() {
-    this.deleteAnimalsDialog = true;
+    // this.deleteAnimalsDialog = true;
   }
 
   confirmDelete() {
@@ -176,22 +197,32 @@ export class AnimalsComponent implements OnInit {
     this.animalService.deleteAnimal(this.animal).subscribe(
       (data: any) => {
         // console.log(data);
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animal Removido', life: 3000 });
-        this.animal = {};
         this.getAllAnimals();
+        this.animal = {};
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Sucesso', 
+          detail: 'Animal excluído com sucesso!', 
+          life: 3000 
+        });
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível remover o Animal', life: 3000 });
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'Erro', 
+          detail: 'Não foi possível excluir o Animal', 
+          life: 3000 
+        });
       }
     );
   }
 
   confirmDeleteSelected() {
-    this.deleteAnimalsDialog = false;
-    this.animals = this.animals.filter(val => !this.selectedAnimals.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animais Removidos', life: 3000 });
-    this.selectedAnimals = [];
+    // this.deleteAnimalsDialog = false;
+    // this.animals = this.animals.filter(val => !this.selectedAnimals.includes(val));
+    // this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Animais Removidos', life: 3000 });
+    // this.selectedAnimals = [];
   }
 
   hideDialog() {

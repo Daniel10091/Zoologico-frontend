@@ -192,6 +192,16 @@ export class AppLayoutComponent implements OnInit {
           }
         ]
       },
+      {
+        label: 'Funcionários',
+        icon: 'pi pi-fw pi-user',
+        items: [
+          {
+            label: 'Todos',
+            routerLink: 'funcionarios/todos',
+          }
+        ]
+      },
     ];
   }
 

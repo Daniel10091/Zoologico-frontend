@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class ZooService {
 
-  private static readonly API = `${environment.apiURLBase}/animal`;
+  private static readonly API = `${environment.apiURLBase}/zoologico`;
 
   constructor(private http: HttpClient) { }
 

@@ -5,6 +5,7 @@ import { AnimalsComponent } from "../pages/animals/animals.component";
 import { MammalsComponent } from "../pages/animals/categories/mammals/mammals.component";
 import { ZoosComponent } from "../pages/zoos/zoos.component";
 import { SuppliersComponent } from "../pages/suppliers/suppliers.component";
+import { EmployeesComponent } from "../pages/employees/employees.component";
 
 export const routes: Routes = [
   {
@@ -50,6 +51,15 @@ export const routes: Routes = [
           {
             path: 'todos',
             component: SuppliersComponent
+          }
+        ]
+      },
+      {
+        path: 'funcionarios',
+        children: [
+          {
+            path: 'todos',
+            component: EmployeesComponent
           }
         ]
       }

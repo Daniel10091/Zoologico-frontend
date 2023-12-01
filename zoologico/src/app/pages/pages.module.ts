@@ -50,6 +50,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { InputMaskModule } from 'primeng/inputmask';
+import { EmployeesComponent } from './employees/employees.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { InputMaskModule } from 'primeng/inputmask';
     ZoosComponent,
 
     SuppliersComponent,
+      EmployeesComponent,
   ],
   imports: [
     CommonModule,
